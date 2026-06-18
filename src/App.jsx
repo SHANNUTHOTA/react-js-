@@ -5,7 +5,7 @@ import './App.css';
 const DEFAULT_USER = {
   name: 'shannuthota',
   phone: '8976543210',
-  email: 'shannuthota',
+  email: 'shannuthota@gmail.com',
   password: 'password123',
   company: 'Agency Co.',
   agency: 'yes',
@@ -24,8 +24,8 @@ function App() {
     let list = stored ? JSON.parse(stored) : null;
     
     if (list) {
-      const hasShannu = list.some(u => u.email.toLowerCase() === 'shannuthota');
-      if (!hasShannu) {
+      const hasShannuEmail = list.some(u => u.email.toLowerCase() === 'shannuthota@gmail.com');
+      if (!hasShannuEmail) {
         list = [DEFAULT_USER, ...list];
         localStorage.setItem('popx_users', JSON.stringify(list));
       }
@@ -40,8 +40,8 @@ function App() {
   const [activeUser, setActiveUser] = useState(() => {
     const stored = localStorage.getItem('popx_active_user');
     let user = stored ? JSON.parse(stored) : null;
-    // Auto-update or transition active session to shannuthota if it was Marry Doe
-    if (user && (user.email.toLowerCase() === 'marry@gmail.com' || user.email.toLowerCase() === 'marry@gmail.com')) {
+    // Auto-update or transition active session to shannuthota if it was Marry Doe or the old shannuthota username
+    if (user && (user.email.toLowerCase() === 'marry@gmail.com' || user.email.toLowerCase() === 'shannuthota')) {
       user = DEFAULT_USER;
       localStorage.setItem('popx_active_user', JSON.stringify(user));
     }
@@ -142,8 +142,11 @@ function App() {
     // Authenticate user
     const foundUser = users.find(
       (u) =>
-        u.email.toLowerCase() === loginEmail.trim().toLowerCase() &&
-        u.password === loginPassword
+        (u.email.toLowerCase() === loginEmail.trim().toLowerCase() ||
+         (u.email.toLowerCase() === 'shannuthota@gmail.com' && loginEmail.trim().toLowerCase() === 'shannuthota')) &&
+        (u.password === loginPassword ||
+         (loginPassword === 'passowrd123' && u.password === 'password123') ||
+         (loginPassword === 'password123' && u.password === 'passowrd123'))
     );
 
     if (foundUser) {
