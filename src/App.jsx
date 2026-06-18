@@ -3,9 +3,9 @@ import './App.css';
 
 // Default User Seed
 const DEFAULT_USER = {
-  name: 'Marry Doe',
+  name: 'shannuthota',
   phone: '8976543210',
-  email: 'Marry@Gmail.Com',
+  email: 'shannuthota',
   password: 'password123',
   company: 'Agency Co.',
   agency: 'yes',
@@ -24,13 +24,11 @@ function App() {
     let list = stored ? JSON.parse(stored) : null;
     
     if (list) {
-      list = list.map(u => {
-        if (u.email.toLowerCase() === 'marry@gmail.com' && (u.bio.includes('simply dummy text') || u.bio.includes('sadipscing elitr'))) {
-          return { ...u, bio: 'Creative frontend developer and UI/UX enthusiast. Passionate about building clean, responsive, and user-friendly web experiences with React.' };
-        }
-        return u;
-      });
-      localStorage.setItem('popx_users', JSON.stringify(list));
+      const hasShannu = list.some(u => u.email.toLowerCase() === 'shannuthota');
+      if (!hasShannu) {
+        list = [DEFAULT_USER, ...list];
+        localStorage.setItem('popx_users', JSON.stringify(list));
+      }
       return list;
     } else {
       const defaultList = [DEFAULT_USER];
@@ -42,8 +40,9 @@ function App() {
   const [activeUser, setActiveUser] = useState(() => {
     const stored = localStorage.getItem('popx_active_user');
     let user = stored ? JSON.parse(stored) : null;
-    if (user && user.email.toLowerCase() === 'marry@gmail.com' && (user.bio.includes('simply dummy text') || user.bio.includes('sadipscing elitr'))) {
-      user = { ...user, bio: 'Creative frontend developer and UI/UX enthusiast. Passionate about building clean, responsive, and user-friendly web experiences with React.' };
+    // Auto-update or transition active session to shannuthota if it was Marry Doe
+    if (user && (user.email.toLowerCase() === 'marry@gmail.com' || user.email.toLowerCase() === 'marry@gmail.com')) {
+      user = DEFAULT_USER;
       localStorage.setItem('popx_active_user', JSON.stringify(user));
     }
     return user;
@@ -112,10 +111,14 @@ function App() {
 
   const fileInputRef = useRef(null);
 
-  // Email Validator
+  // Email/Username Validator
   const validateEmail = (email) => {
+    if (!email.includes('@')) {
+      return email.trim().length >= 3;
+    }
     return /\S+@\S+\.\S+/.test(email);
   };
+
 
   // Login Submit
   const handleLoginSubmit = (e) => {
